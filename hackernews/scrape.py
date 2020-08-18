@@ -2,11 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import pprint
 
-response = requests.get('https://news.ycombinator.com/news')
-soup = BeautifulSoup(response.text, 'html.parser')
-links = soup.select('.storylink')
-subtext = soup.select('.subtext')
-
 def create_custom_hn(links,subtext):
     hn = []
     
@@ -23,5 +18,13 @@ def create_custom_hn(links,subtext):
 
 def sort_stories_by_votes(stories):
     return sorted(stories, key=lambda item: item['votes'], reverse=True)
+
+links, subtext = [], []
+for i in range(1,3):
+    response = requests.get(f'https://news.ycombinator.com/news?p={i}')
+    soup = BeautifulSoup(response.text, 'html.parser')
+    links.extend(soup.select('.storylink'))
+    subtext.extend(soup.select('.subtext'))
+print(links)
 
 pprint.pprint(create_custom_hn(links,subtext))
